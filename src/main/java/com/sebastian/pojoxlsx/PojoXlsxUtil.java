@@ -39,7 +39,6 @@ final class PojoXlsxUtil {
     try {
       field.setAccessible(true);
       final Object valor = field.get(element);
-      System.out.println(valor);
       if (valor instanceof String) {
         cell.setCellValue((String) valor);
       } else if (valor instanceof Integer) {
