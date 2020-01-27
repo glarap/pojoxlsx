@@ -1,6 +1,5 @@
 package com.sebastian.pojoxlsx;
 
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,8 +37,9 @@ final class PojoXlsxUtil {
     final XSSFCell cell = row.createCell(column);
 
     try {
-      final Object valor = new PropertyDescriptor(field.getName(), element.getClass())
-          .getReadMethod().invoke(element);
+      field.setAccessible(true);
+      final Object valor = field.get(element);
+      System.out.println(valor);
       if (valor instanceof String) {
         cell.setCellValue((String) valor);
       } else if (valor instanceof Integer) {
@@ -64,7 +64,7 @@ final class PojoXlsxUtil {
         cell.setCellValue((RichTextString) valor);
       }
     } catch (Exception e) {
-      throw new IllegalArgumentException("el campo indicado puede ser agregado");
+      throw new IllegalArgumentException("el campo indicado no puede ser obtenido");
     }
   }
 

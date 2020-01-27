@@ -31,7 +31,7 @@ public class PojoXlsxTest {
     date.setDate(date.getDate() + 1);
     Calendar cal = Calendar.getInstance();
     cal.setTime(date);
-    personas.add(new Persona("sebastian", 4, true, cal, new Date(), 21.3, LocalDateTime.now(),
+    personas.add(new Persona("sebastian", 4, false, cal, new Date(), 21.3, LocalDateTime.now(),
         LocalDate.now()));
     personas.add(new Persona("elfo", 6, true, Calendar.getInstance(), new Date(), 32.3,
         LocalDateTime.now(), LocalDate.now()));
