@@ -22,9 +22,14 @@ class Persona {
   private LocalDateTime despierta;
   @XlsxCellHeader(name = "Se Acostó a las", bold = false)
   private LocalDate acuesta;
+	@XlsxCellBody(epochLong = true)
+	private double fecha;
+  @XlsxCellBody(epochLong = true, zoneId = "America/Santiago", dateFormat = "::dd::MM::yyyy:: HH<>mm<>ss")
+	@XlsxCellHeader(name = "Fecha Long")
+	private double fechaLong;
 
   public Persona(String nombre, int edad, boolean vivo, Calendar nacimiento, Date fallecimiento,
-      double peso, LocalDateTime despierta, LocalDate acuesta) {
+      double peso, LocalDateTime despierta, LocalDate acuesta, final long fecha) {
     super();
     this.nombre = nombre;
     this.edad = edad;
@@ -34,7 +39,17 @@ class Persona {
     this.peso = peso;
     this.despierta = despierta;
     this.acuesta = acuesta;
+		this.fecha = fecha;
+		this.fechaLong = fecha;
   }
+
+	public double getFechaLong() {
+		return fechaLong;
+	}
+
+	public void setFechaLong(double fechaLong) {
+		this.fechaLong = fechaLong;
+	}
 
   /**
    * @return the nombre
@@ -133,6 +148,14 @@ class Persona {
   public void setDespierta(LocalDateTime despierta) {
     this.despierta = despierta;
   }
+
+	public double getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(double fecha) {
+		this.fecha = fecha;
+	}
 
   /**
    * @return the acuesta

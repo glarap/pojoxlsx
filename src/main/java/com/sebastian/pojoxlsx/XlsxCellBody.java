@@ -6,17 +6,29 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * propiedades para las celdar de cabeceras.
- * 
- * @author Sebastián Ávila A.
+ * propiedades para las celdar del cuerpo del archivo.
  *
+ * @author Sebastián Ávila A.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface XlsxCellHeader {
-  /** nombre que se define a la celda (por defecto es el nombre del campo). */
-  public String name() default "";
-
-  /** indica si la celda queda bold. */
-  public boolean bold() default true;
+public @interface XlsxCellBody {
+  /**
+   * indica si el contenido del elemento tiene que ser representado como una fecha.
+   *
+   * @return si es true se transformará a un string representando la fecha
+   */
+  public boolean epochLong() default false;
+  /**
+	 * si se indica se utiliza para el formato de salida de la fecha cuando epochLong es true.
+	 * 
+   * @return el formato definido para la fecha cuando epochLong es utilizado, en otro caso se ignora
+   */
+  public String dateFormat() default "";
+  /**
+   * id de zona, ejemplo: America/Santiago. Es UTC por defecto, se evalúa cuando epochLong es true.
+   *
+   * @return el id de la zona para el formato de la fecha cuando es epochLong true
+   */
+  public String zoneId() default "UTC";
 }

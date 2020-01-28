@@ -1,5 +1,6 @@
 package com.sebastian.pojoxlsx;
 
+import com.sebastian.pojoxlsx.utils.PojoXlsxUtil;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;

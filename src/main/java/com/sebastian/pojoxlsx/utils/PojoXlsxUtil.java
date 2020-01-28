@@ -1,8 +1,13 @@
-package com.sebastian.pojoxlsx;
+package com.sebastian.pojoxlsx.utils;
 
+import com.sebastian.pojoxlsx.XlsxCellBody;
+import com.sebastian.pojoxlsx.XlsxCellHeader;
 import java.lang.reflect.Field;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -20,9 +25,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author Sebastián Ávila A.
  *
  */
-final class PojoXlsxUtil {
+public final class PojoXlsxUtil {
+	private static XSSFCellStyle fuenteNegrita;
   private PojoXlsxUtil() {}
-
+		
   /**
    * agrega un campo valor a la columna indicada.
    * 
@@ -32,14 +38,17 @@ final class PojoXlsxUtil {
    * @param field campo del elemento que se quiere agregar
    * @throws IllegalArgumentException cuando el campo del elemento no se pudo agregar
    */
-  static <T> void addValue(final int column, final XSSFRow row, final T element, final Field field,
+  public static <T> void addValue(final int column, final XSSFRow row, final T element, final Field field,
       final XSSFWorkbook wb) {
     final XSSFCell cell = row.createCell(column);
 
     try {
+			XlsxCellBody ann = field.getAnnotation(XlsxCellBody.class);
       field.setAccessible(true);
       final Object valor = field.get(element);
-      if (valor instanceof String) {
+      if (DateTimeUtil.hasEpochLong(ann)) {
+        cell.setCellValue(DateTimeUtil.format(valor, ann));
+			} else if (valor instanceof String) {
         cell.setCellValue((String) valor);
       } else if (valor instanceof Integer) {
         cell.setCellValue((Integer) valor);
@@ -63,7 +72,7 @@ final class PojoXlsxUtil {
         cell.setCellValue((RichTextString) valor);
       }
     } catch (Exception e) {
-      throw new IllegalArgumentException("el campo indicado no puede ser obtenido");
+      throw new IllegalArgumentException("el campo indicado no puede ser obtenido", e);
     }
   }
 
@@ -80,16 +89,19 @@ final class PojoXlsxUtil {
    * @param campos campos que se agregan como headers
    * @param wb origen xlsx
    */
-  static void addColumnTitle(final XSSFRow row, final Field[] campos, final XSSFWorkbook wb) {
+  public static void addColumnTitle(final XSSFRow row, final Field[] campos, final XSSFWorkbook wb) {
     int columna = 0;
-    XSSFCellStyle fuenteNegrita = wb.createCellStyle();
-    final XSSFFont df = wb.createFont();
-    df.setFontHeightInPoints((short) 10);
-    df.setFontName("Arial");
-    df.setColor(IndexedColors.BLACK.getIndex());
-    df.setBold(true);
-    df.setItalic(false);
-    fuenteNegrita.setFont(df);
+		if (fuenteNegrita == null) {
+			fuenteNegrita = wb.createCellStyle();
+			final XSSFFont df = wb.createFont();
+			df.setFontHeightInPoints((short) 10);
+			df.setFontName("Arial");
+			df.setColor(IndexedColors.BLACK.getIndex());
+			df.setBold(true);
+			df.setItalic(false);
+			fuenteNegrita.setFont(df);
+		}
+		
     for (Field c : campos) {
       boolean bold = true;
       final XSSFCell cell = row.createCell(columna++);
@@ -105,14 +117,16 @@ final class PojoXlsxUtil {
         } else {
           cell.setCellValue(c.getName());
         }
-      }
+      } else {
+				cell.setCellValue(c.getName());
+			}
       if (bold) {
         cell.setCellStyle(fuenteNegrita);
       }
     }
   }
 
-  private static final void dateFormat(final XSSFCell cell, final XSSFWorkbook wb) {
+  private static void dateFormat(final XSSFCell cell, final XSSFWorkbook wb) {
     CellStyle cellStyle = wb.createCellStyle();
     cellStyle.setDataFormat((short) 14);
     cell.setCellStyle(cellStyle);

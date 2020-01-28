@@ -46,7 +46,7 @@ private LocalDate acuesta;
 * name será el nombre de la columna (por defecto es el nombre del campo)
 * bold indica si se ocupa la letra en negrita (true por defecto)
 
-### agregar la dependencia:
+### Agregar la dependencia
 ```
 <repositories>
     <repository>
