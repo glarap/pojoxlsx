@@ -23,8 +23,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author Sebastián Ávila A.
  */
 public final class PojoXlsxUtil {
-  private static XSSFCellStyle fuenteNegrita;
-
   private PojoXlsxUtil() {}
 
   private static boolean omitir(final Field field) {
@@ -47,7 +45,7 @@ public final class PojoXlsxUtil {
       final T element,
       final Field field,
       final XSSFWorkbook wb) {
-		boolean agregado = false;
+    boolean agregado = false;
     if (!omitir(field)) {
       final XSSFCell cell = row.createCell(column);
       try {
@@ -79,12 +77,12 @@ public final class PojoXlsxUtil {
         } else if (valor instanceof RichTextString) {
           cell.setCellValue((RichTextString) valor);
         }
-				agregado = true;
+        agregado = true;
       } catch (Exception e) {
         throw new IllegalArgumentException("el campo indicado no puede ser obtenido", e);
       }
     }
-		return agregado;
+    return agregado;
   }
 
   /**
@@ -101,16 +99,14 @@ public final class PojoXlsxUtil {
   public static void addColumnTitle(
       final XSSFRow row, final Field[] campos, final XSSFWorkbook wb) {
     int columna = 0;
-    if (fuenteNegrita == null) {
-      fuenteNegrita = wb.createCellStyle();
-      final XSSFFont df = wb.createFont();
-      df.setFontHeightInPoints((short) 10);
-      df.setFontName("Arial");
-      df.setColor(IndexedColors.BLACK.getIndex());
-      df.setBold(true);
-      df.setItalic(false);
-      fuenteNegrita.setFont(df);
-    }
+    final XSSFCellStyle fuenteNegrita = wb.createCellStyle();
+    final XSSFFont df = wb.createFont();
+    df.setFontHeightInPoints((short) 10);
+    df.setFontName("Arial");
+    df.setColor(IndexedColors.BLACK.getIndex());
+    df.setBold(true);
+    df.setItalic(false);
+    fuenteNegrita.setFont(df);
 
     for (Field c : campos) {
       if (!omitir(c)) {
