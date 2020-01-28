@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 class Persona {
+	transient private int id;
   @XlsxCellHeader(name = "Nombre")
   private String nombre;
   @XlsxCellHeader(name = "Edad")
@@ -49,6 +50,14 @@ class Persona {
 
 	public void setFechaLong(double fechaLong) {
 		this.fechaLong = fechaLong;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
   /**

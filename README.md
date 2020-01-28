@@ -20,6 +20,7 @@ class Persona {
   // getter y setter
 }
 ```
+* Usar transient en un campo para omitirlo
 * Usar un List para juntar instancias de Persona:
 ```
 final List<Persona> personas = new ArrayList<>();

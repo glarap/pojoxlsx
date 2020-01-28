@@ -46,7 +46,9 @@ public final class PojoXlsx {
           conCabeceras = true;
         }
         for (Field c : campos) {
-          PojoXlsxUtil.addValue(columna++, row, d, c, wb);
+          if (PojoXlsxUtil.addValue(columna, row, d, c, wb)) {
+						columna++;
+					}
         }
       }
       wb.write(os);
