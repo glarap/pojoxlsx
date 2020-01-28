@@ -4,7 +4,7 @@ librería para convertir listado de Pojos a un xlsx. Utiliza una lista de elemen
 
 
 ### Como funciona?
-* crear una pojo, por ejemplo:
+* crear un pojo, por ejemplo:
 
 ```
 class Persona {
