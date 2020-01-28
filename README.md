@@ -37,7 +37,7 @@ try (FileOutputStream fos = new FileOutputStream(f)) {
       fos.write(baos.toByteArray());
 }
  ```
- ### Personalización cabeceras
+### Personalización cabeceras
 Utilizando la anotación @XlsxCellHeader es posible modificar el comportamiento de la generación de las cabeceras de la hoja generada:
 ```
 @XlsxCellHeader(name = "Se Acostó a las", bold = false)
@@ -45,6 +45,12 @@ private LocalDate acuesta;
 ```
 * name será el nombre de la columna (por defecto es el nombre del campo)
 * bold indica si se ocupa la letra en negrita (true por defecto)
+
+### Personalización body
+los elementos del body se pueden personalizar utilizando la anotación XlsxCellBody:
+* epochLong: si es true se considera el valor del campo como los milisegundos de la fecha (unix timestamp).
+* zoneId: si epochLong es true se puede indicar la zona en la cual tiene que ser convertido, por defecto es UTC (ZonedDateTime).
+* dateFormat: si epochLong es true se puede indicar el formato que se utilizará para la salida del ZonedDateTime que es internamente utilizado.
 
 ### Agregar la dependencia
 ```
