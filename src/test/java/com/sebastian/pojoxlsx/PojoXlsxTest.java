@@ -21,8 +21,6 @@ import org.junit.jupiter.api.Test;
  */
 public class PojoXlsxTest {
 
-
-
   @Test
   void obtengoDatosXlsx() throws IOException {
     final ByteArrayOutputStream baos = new ByteArrayOutputStream();
