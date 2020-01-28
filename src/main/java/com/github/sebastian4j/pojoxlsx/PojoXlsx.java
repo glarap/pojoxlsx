@@ -1,6 +1,6 @@
-package com.sebastian.pojoxlsx;
+package com.github.sebastian4j.pojoxlsx;
 
-import com.sebastian.pojoxlsx.utils.PojoXlsxUtil;
+import com.github.sebastian4j.pojoxlsx.utils.PojoXlsxUtil;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;

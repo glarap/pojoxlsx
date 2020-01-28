@@ -1,13 +1,10 @@
-package com.sebastian.pojoxlsx.utils;
+package com.github.sebastian4j.pojoxlsx.utils;
 
-import com.sebastian.pojoxlsx.XlsxCellBody;
-import com.sebastian.pojoxlsx.XlsxCellHeader;
+import com.github.sebastian4j.pojoxlsx.XlsxCellBody;
+import com.github.sebastian4j.pojoxlsx.XlsxCellHeader;
 import java.lang.reflect.Field;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import org.apache.poi.ss.usermodel.CellStyle;

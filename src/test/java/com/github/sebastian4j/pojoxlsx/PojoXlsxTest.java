@@ -1,4 +1,4 @@
-package com.sebastian.pojoxlsx;
+package com.github.sebastian4j.pojoxlsx;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

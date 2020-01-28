@@ -52,27 +52,5 @@ los elementos del body se pueden personalizar utilizando la anotación XlsxCellB
 * zoneId: si epochLong es true se puede indicar la zona en la cual tiene que ser convertido, por defecto es UTC (ZonedDateTime).
 * dateFormat: si epochLong es true se puede indicar el formato que se utilizará para la salida del ZonedDateTime que es internamente utilizado.
 
-### Agregar la dependencia
-```
-<repositories>
-    <repository>
-        <id>mvn-repo</id>
-        <url>https://github.com/sebastian4j/pojoxlsx/tree/master/mvn-repo</url>
-        <releases>
-            <enabled>true</enabled>
-        </releases>
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>
-    </repository>
-</repositories>
-
-<dependency>
-    <groupId>com.sebastian</groupId>
-    <artifactId>pojoxlsx</artifactId>
-    <version>a.b.c</version>
-</dependency>
-```
-
 ### Dependencias
 * org.apache.poi

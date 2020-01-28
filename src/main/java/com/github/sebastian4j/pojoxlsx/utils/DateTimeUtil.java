@@ -1,6 +1,6 @@
-package com.sebastian.pojoxlsx.utils;
+package com.github.sebastian4j.pojoxlsx.utils;
 
-import com.sebastian.pojoxlsx.XlsxCellBody;
+import com.github.sebastian4j.pojoxlsx.XlsxCellBody;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;

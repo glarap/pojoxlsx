@@ -1,4 +1,4 @@
-package com.sebastian.pojoxlsx;
+package com.github.sebastian4j.pojoxlsx;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
