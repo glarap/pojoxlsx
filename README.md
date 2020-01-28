@@ -70,7 +70,7 @@ los elementos del body se pueden personalizar utilizando la anotación XlsxCellB
 <dependency>
     <groupId>com.sebastian</groupId>
     <artifactId>pojoxlsx</artifactId>
-    <version>0.0.1</version>
+    <version>a.b.c</version>
 </dependency>
 ```
 
