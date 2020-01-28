@@ -52,30 +52,32 @@ public final class PojoXlsxUtil {
         XlsxCellBody ann = field.getAnnotation(XlsxCellBody.class);
         field.setAccessible(true);
         final Object valor = field.get(element);
-        if (DateTimeUtil.hasEpochLong(ann)) {
-          cell.setCellValue(DateTimeUtil.format(valor, ann));
-        } else if (valor instanceof String) {
-          cell.setCellValue((String) valor);
-        } else if (valor instanceof Integer) {
-          cell.setCellValue((Integer) valor);
-        } else if (valor instanceof Boolean) {
-          cell.setCellValue(((Boolean) valor).toString());
-        } else if (valor instanceof Calendar) {
-          dateFormat(cell, wb);
-          cell.setCellValue((Calendar) valor);
-        } else if (valor instanceof Date) {
-          dateFormat(cell, wb);
-          cell.setCellValue((Date) valor);
-        } else if (valor instanceof Double) {
-          cell.setCellValue((Double) valor);
-        } else if (valor instanceof LocalDateTime) {
-          dateFormat(cell, wb);
-          cell.setCellValue((LocalDateTime) valor);
-        } else if (valor instanceof LocalDate) {
-          cell.setCellValue((LocalDate) valor);
-          dateFormat(cell, wb);
-        } else if (valor instanceof RichTextString) {
-          cell.setCellValue((RichTextString) valor);
+        if (valor != null) {
+          if (DateTimeUtil.hasEpochLong(ann)) {
+            cell.setCellValue(DateTimeUtil.format(valor, ann));
+          } else if (valor instanceof String) {
+            cell.setCellValue((String) valor);
+          } else if (valor instanceof Integer) {
+            cell.setCellValue((Integer) valor);
+          } else if (valor instanceof Boolean) {
+            cell.setCellValue(((Boolean) valor).toString());
+          } else if (valor instanceof Calendar) {
+            dateFormat(cell, wb);
+            cell.setCellValue((Calendar) valor);
+          } else if (valor instanceof Date) {
+            dateFormat(cell, wb);
+            cell.setCellValue((Date) valor);
+          } else if (valor instanceof Double) {
+            cell.setCellValue((Double) valor);
+          } else if (valor instanceof LocalDateTime) {
+            dateFormat(cell, wb);
+            cell.setCellValue((LocalDateTime) valor);
+          } else if (valor instanceof LocalDate) {
+            cell.setCellValue((LocalDate) valor);
+            dateFormat(cell, wb);
+          } else if (valor instanceof RichTextString) {
+            cell.setCellValue((RichTextString) valor);
+          }
         }
         agregado = true;
       } catch (Exception e) {

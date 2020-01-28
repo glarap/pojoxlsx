@@ -10,27 +10,30 @@ class Persona {
   @XlsxCellHeader(name = "Nombre")
   private String nombre;
   @XlsxCellHeader(name = "Edad")
-  private int edad;
+  private Integer edad;
   @XlsxCellHeader(name = "Vivo")
-  private boolean vivo;
+  private Boolean vivo;
   @XlsxCellHeader(name = "Nacimiento")
   private Calendar nacimiento;
   @XlsxCellHeader(name = "Fallecimiento")
   private Date fallecimiento;
   @XlsxCellHeader(name = "Peso Actual")
-  private double peso;
+  private Double peso;
   @XlsxCellHeader(name = "Despertó a las")
   private LocalDateTime despierta;
   @XlsxCellHeader(name = "Se Acostó a las", bold = false)
   private LocalDate acuesta;
 	@XlsxCellBody(epochLong = true)
-	private double fecha;
+	private Double fecha;
   @XlsxCellBody(epochLong = true, zoneId = "America/Santiago", dateFormat = "::dd::MM::yyyy:: HH<>mm<>ss")
 	@XlsxCellHeader(name = "Fecha Long")
-	private double fechaLong;
+	private Double fechaLong;
+	private Double nulo;
 
-  public Persona(String nombre, int edad, boolean vivo, Calendar nacimiento, Date fallecimiento,
-      double peso, LocalDateTime despierta, LocalDate acuesta, final long fecha) {
+	public Persona() {}
+	
+  public Persona(String nombre, Integer edad, Boolean vivo, Calendar nacimiento, Date fallecimiento,
+      Double peso, LocalDateTime despierta, LocalDate acuesta, final Long fecha) {
     super();
     this.nombre = nombre;
     this.edad = edad;
@@ -40,23 +43,31 @@ class Persona {
     this.peso = peso;
     this.despierta = despierta;
     this.acuesta = acuesta;
-		this.fecha = fecha;
-		this.fechaLong = fecha;
+		this.fecha = Double.valueOf(fecha);
+		this.fechaLong = Double.valueOf(fecha);
   }
 
 	public double getFechaLong() {
 		return fechaLong;
 	}
 
-	public void setFechaLong(double fechaLong) {
+	public void setFechaLong(Double fechaLong) {
 		this.fechaLong = fechaLong;
+	}
+
+	public Double getNulo() {
+		return nulo;
+	}
+
+	public void setNulo(Double nulo) {
+		this.nulo = nulo;
 	}
 
 	public int getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -84,7 +95,7 @@ class Persona {
   /**
    * @param edad the edad to set
    */
-  public void setEdad(int edad) {
+  public void setEdad(Integer edad) {
     this.edad = edad;
   }
 
@@ -98,7 +109,7 @@ class Persona {
   /**
    * @param vivo the vivo to set
    */
-  public void setVivo(boolean vivo) {
+  public void setVivo(Boolean vivo) {
     this.vivo = vivo;
   }
 
@@ -140,7 +151,7 @@ class Persona {
   /**
    * @param peso the peso to set
    */
-  public void setPeso(double peso) {
+  public void setPeso(Double peso) {
     this.peso = peso;
   }
 
@@ -162,7 +173,7 @@ class Persona {
 		return fecha;
 	}
 
-	public void setFecha(double fecha) {
+	public void setFecha(Double fecha) {
 		this.fecha = fecha;
 	}
 

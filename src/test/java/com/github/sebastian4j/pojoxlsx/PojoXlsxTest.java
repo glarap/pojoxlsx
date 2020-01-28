@@ -33,6 +33,15 @@ public class PojoXlsxTest {
         LocalDate.now(), 1580214962000L));
     personas.add(new Persona("elfo", 6, true, Calendar.getInstance(), new Date(), 32.3,
         LocalDateTime.now(), LocalDate.now(), 1580214962000L));
+		final Persona nonulo = new Persona("nulo", 0, true, Calendar.getInstance(), new Date(), 32.3,
+        LocalDateTime.now(), LocalDate.now(), 1580214962000L);
+		
+		final Persona resumen = new Persona();
+    resumen.setEdad(10);
+
+    nonulo.setNulo(1d);
+		personas.add(nonulo);
+		personas.add(resumen);
     Assertions.assertThatCode(() -> {
       PojoXlsx.transform(personas, "reporte personas", baos);
     }).doesNotThrowAnyException();
