@@ -27,4 +27,18 @@ public @interface XlsxCellHeader {
    * @return true si hay que dejar bold la cabecera
    */
   public boolean bold() default true;
+	
+	/**
+	 * define el tamaño de la fuente de la cabecera.
+	 * 
+	 * @return tamaño de la fuente
+	 */
+	public short fontSize() default 10;
+	
+  /**
+   * define el color de la fuente según la definicion en {@link IndexedColors}.
+   *
+   * @return tamaño de la fuente
+   */
+  public short fontColor() default 0;
 }

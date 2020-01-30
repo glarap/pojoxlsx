@@ -4,12 +4,13 @@ import com.github.sebastian4j.pojoxlsx.XlsxCellBody;
 import com.github.sebastian4j.pojoxlsx.XlsxCellHeader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -29,6 +30,42 @@ public final class PojoXlsxUtil {
     return Modifier.isTransient(field.getModifiers());
   }
 
+  private static void addDate(
+      final Calendar calendar, final Optional<String> formato, final XSSFCell cell) {
+    final Date cal = calendar.getTime();
+    if (formato.isPresent()) {
+      cell.setCellValue(DateTimeUtil.format(cal, formato.get()));
+    } else {
+      cell.setCellValue(DateTimeUtil.format(cal));
+    }
+  }
+
+  private static void addDate(
+      final Date date, final Optional<String> formato, final XSSFCell cell) {
+    if (formato.isPresent()) {
+      cell.setCellValue(DateTimeUtil.format(date, formato.get()));
+    } else {
+      cell.setCellValue(DateTimeUtil.format(date));
+    }
+  }
+
+  private static void addDate(
+      final LocalDate ld, final Optional<String> formato, final XSSFCell cell) {
+    if (formato.isPresent()) {
+      cell.setCellValue(DateTimeUtil.format(ld, formato.get()));
+    } else {
+      cell.setCellValue(DateTimeUtil.format(ld));
+    }
+  }
+
+  private static void addDate(
+      final LocalDateTime ld, final Optional<String> formato, final XSSFCell cell) {
+    if (formato.isPresent()) {
+      cell.setCellValue(DateTimeUtil.format(ld, formato.get()));
+    } else {
+      cell.setCellValue(DateTimeUtil.format(ld));
+    }
+  }
   /**
    * agrega un campo valor a la columna indicada.
    *
@@ -49,7 +86,10 @@ public final class PojoXlsxUtil {
     if (!omitir(field)) {
       final XSSFCell cell = row.createCell(column);
       try {
-        XlsxCellBody ann = field.getAnnotation(XlsxCellBody.class);
+        final XlsxCellBody ann = field.getAnnotation(XlsxCellBody.class);
+        short fontSize = AnnotationUtil.fontSize(ann);
+        short fontColor = AnnotationUtil.fontColor(ann);
+        Optional<String> formato = AnnotationUtil.dateFormat(ann);
         field.setAccessible(true);
         final Object valor = field.get(element);
         if (valor != null) {
@@ -58,26 +98,30 @@ public final class PojoXlsxUtil {
           } else if (valor instanceof String) {
             cell.setCellValue((String) valor);
           } else if (valor instanceof Integer) {
-            cell.setCellValue((Integer) valor);
+            generarNumero((Integer) valor, ann, cell);
           } else if (valor instanceof Boolean) {
             cell.setCellValue(((Boolean) valor).toString());
           } else if (valor instanceof Calendar) {
             dateFormat(cell, wb);
-            cell.setCellValue((Calendar) valor);
+            addDate((Calendar) valor, formato, cell);
           } else if (valor instanceof Date) {
             dateFormat(cell, wb);
-            cell.setCellValue((Date) valor);
+            addDate((Date) valor, formato, cell);
           } else if (valor instanceof Double) {
-            cell.setCellValue((Double) valor);
+            generarNumero((Double) valor, ann, cell);
           } else if (valor instanceof LocalDateTime) {
             dateFormat(cell, wb);
-            cell.setCellValue((LocalDateTime) valor);
+            addDate((LocalDateTime) valor, formato, cell);
           } else if (valor instanceof LocalDate) {
-            cell.setCellValue((LocalDate) valor);
             dateFormat(cell, wb);
+            addDate((LocalDate) valor, formato, cell);
           } else if (valor instanceof RichTextString) {
             cell.setCellValue((RichTextString) valor);
           }
+          final XSSFCellStyle fuente = wb.createCellStyle();
+          final XSSFFont df = wb.createFont();
+          normalFont(df, fontSize, fuente, fontColor);
+          cell.setCellStyle(fuente);
         }
         agregado = true;
       } catch (Exception e) {
@@ -85,6 +129,20 @@ public final class PojoXlsxUtil {
       }
     }
     return agregado;
+  }
+
+  private static void generarNumero(
+      final Double valor, final XlsxCellBody ann, final XSSFCell cell) {
+    if (valor != null && AnnotationUtil.formatNumber(ann)) {
+      cell.setCellValue(NumberFormat.getInstance().format(valor));
+    } else {
+      cell.setCellValue(valor);
+    }
+  }
+
+  private static void generarNumero(
+      final Integer valor, final XlsxCellBody ann, final XSSFCell cell) {
+    generarNumero(Double.valueOf(valor), ann, cell);
   }
 
   /**
@@ -101,21 +159,18 @@ public final class PojoXlsxUtil {
   public static void addColumnTitle(
       final XSSFRow row, final Field[] campos, final XSSFWorkbook wb) {
     int columna = 0;
-    final XSSFCellStyle fuenteNegrita = wb.createCellStyle();
-    final XSSFFont df = wb.createFont();
-    df.setFontHeightInPoints((short) 10);
-    df.setFontName("Arial");
-    df.setColor(IndexedColors.BLACK.getIndex());
-    df.setBold(true);
-    df.setItalic(false);
-    fuenteNegrita.setFont(df);
-
     for (Field c : campos) {
       if (!omitir(c)) {
+        final XSSFCellStyle fuente = wb.createCellStyle();
+        final XSSFFont df = wb.createFont();
         boolean bold = true;
         final XSSFCell cell = row.createCell(columna++);
         final XlsxCellHeader ann = c.getAnnotation(XlsxCellHeader.class);
+        short fontSize = 10;
+        short fontColor = 0;
         if (ann != null) {
+          fontSize = ann.fontSize();
+          fontColor = ann.fontColor();
           if (ann.bold()) {
             bold = true;
           } else {
@@ -130,10 +185,34 @@ public final class PojoXlsxUtil {
           cell.setCellValue(c.getName());
         }
         if (bold) {
-          cell.setCellStyle(fuenteNegrita);
+          boldFont(df, fontSize, fuente, fontColor);
+          cell.setCellStyle(fuente);
+        } else {
+          normalFont(df, fontSize, fuente, fontColor);
+          cell.setCellStyle(fuente);
         }
       }
     }
+  }
+
+  private static void boldFont(
+      final XSSFFont df, short fontSize, final XSSFCellStyle style, final short fontColor) {
+    df.setFontHeightInPoints(fontSize);
+    df.setFontName("Arial");
+    df.setColor(fontColor);
+    df.setBold(true);
+    df.setItalic(false);
+    style.setFont(df);
+  }
+
+  private static void normalFont(
+      final XSSFFont df, short fontSize, final XSSFCellStyle style, final short fontColor) {
+    df.setFontHeightInPoints(fontSize);
+    df.setFontName("Arial");
+    df.setColor(fontColor);
+    df.setBold(false);
+    df.setItalic(false);
+    style.setFont(df);
   }
 
   private static void dateFormat(final XSSFCell cell, final XSSFWorkbook wb) {

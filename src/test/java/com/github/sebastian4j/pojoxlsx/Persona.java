@@ -7,17 +7,19 @@ import java.util.Date;
 
 class Persona {
 	transient private int id;
-  @XlsxCellHeader(name = "Nombre")
+  @XlsxCellHeader(name = "Nombre", fontSize = 20)
   private String nombre;
   @XlsxCellHeader(name = "Edad")
   private Integer edad;
   @XlsxCellHeader(name = "Vivo")
   private Boolean vivo;
-  @XlsxCellHeader(name = "Nacimiento")
+  @XlsxCellHeader(name = "Nacimiento", fontColor = 7)
   private Calendar nacimiento;
   @XlsxCellHeader(name = "Fallecimiento")
+	@XlsxCellBody(dateFormat = "dd-MM-yyyy HH:mm:ss")
   private Date fallecimiento;
   @XlsxCellHeader(name = "Peso Actual")
+	@XlsxCellBody(fontColor = 10, formatNumber = true)
   private Double peso;
   @XlsxCellHeader(name = "Despertó a las")
   private LocalDateTime despierta;
@@ -25,7 +27,7 @@ class Persona {
   private LocalDate acuesta;
 	@XlsxCellBody(epochLong = true)
 	private Double fecha;
-  @XlsxCellBody(epochLong = true, zoneId = "America/Santiago", dateFormat = "::dd::MM::yyyy:: HH<>mm<>ss")
+  @XlsxCellBody(epochLong = true, zoneId = "America/Santiago", dateFormat = "::dd::MM::yyyy:: HH<>mm<>ss", fontSize = 20)
 	@XlsxCellHeader(name = "Fecha Long")
 	private Double fechaLong;
 	private Double nulo;
