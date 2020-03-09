@@ -51,13 +51,16 @@ private LocalDate acuesta;
 * **fontColor**: color de la fuente según la definición en IndexedColors de org.apache.poi (0 predefinido = negro)
 
 ### Personalización body
-los elementos del body se pueden personalizar utilizando la anotación XlsxCellBody:
+- los elementos del body se pueden personalizar utilizando la anotación XlsxCellBody:
 * **epochLong**: si es true se considera el valor del campo como los milisegundos de la fecha (unix timestamp).
 * **zoneId**: si epochLong es true se puede indicar la zona en la cual tiene que ser convertido, por defecto es UTC (ZonedDateTime).
 * **dateFormat**: si epochLong es true se puede indicar el formato que se utilizará para la salida del ZonedDateTime que es internamente utilizado.
 * **fontSize**: tamaño de la fuente (predefinido 10)
 * **fontColor**: color de la fuente según la definición en IndexedColors de org.apache.poi (0 predefinido = negro)
 * **formatNumber**: true indica que se tiene que formatear el número. Se usa el predefinido del sistema.
+
+- usando la interface XlsxCellStyleCallback es posible personalizar la apariencia del contenido del body sin valores predefinidos. Es necesario que retorne true si 
+la celda fue modificada o false para obtener el valor predefinido del estilo (sobreescribe cualquier modificación).
 
 ### Notas
 -- Si en *@XlsxCellBody* define la propiedad *dateFormat* se utilizará para formatear:
@@ -70,3 +73,9 @@ los elementos del body se pueden personalizar utilizando la anotación XlsxCellB
 
 ### Dependencias
 * org.apache.poi
+
+
+**** construir con:
+```
+mvn deploy
+```

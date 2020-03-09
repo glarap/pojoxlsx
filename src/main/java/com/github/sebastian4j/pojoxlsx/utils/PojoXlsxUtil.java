@@ -2,6 +2,7 @@ package com.github.sebastian4j.pojoxlsx.utils;
 
 import com.github.sebastian4j.pojoxlsx.XlsxCellBody;
 import com.github.sebastian4j.pojoxlsx.XlsxCellHeader;
+import com.github.sebastian4j.pojoxlsx.XlsxCellStyleCallback;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.NumberFormat;
@@ -70,18 +71,22 @@ public final class PojoXlsxUtil {
    * agrega un campo valor a la columna indicada.
    *
    * @param column indice de la columna actual
+   * @param rowind indice de la fila actual
    * @param row fila en la que se agrega la columna
    * @param element elemento que se tiene que evaluar para obtener el valor
    * @param field campo del elemento que se quiere agregar
    * @param wb contenedor de las celdas
+   * @param fs estilo para aplicar a celdas del body
    * @throws IllegalArgumentException cuando el campo del elemento no se pudo agregar
    */
   public static <T> boolean addValue(
       final int column,
+      final int rowind,
       final XSSFRow row,
       final T element,
       final Field field,
-      final XSSFWorkbook wb) {
+      final XSSFWorkbook wb,
+      XlsxCellStyleCallback fs) {
     boolean agregado = false;
     if (!omitir(field)) {
       final XSSFCell cell = row.createCell(column);
@@ -92,7 +97,10 @@ public final class PojoXlsxUtil {
         Optional<String> formato = AnnotationUtil.dateFormat(ann);
         field.setAccessible(true);
         final Object valor = field.get(element);
+        boolean procesado = false;
         if (valor != null) {
+          final XSSFFont df = wb.createFont();
+          final XSSFCellStyle fuente = wb.createCellStyle();
           if (DateTimeUtil.hasEpochLong(ann)) {
             cell.setCellValue(DateTimeUtil.format(valor, ann));
           } else if (valor instanceof String) {
@@ -118,9 +126,14 @@ public final class PojoXlsxUtil {
           } else if (valor instanceof RichTextString) {
             cell.setCellValue((RichTextString) valor);
           }
-          final XSSFCellStyle fuente = wb.createCellStyle();
-          final XSSFFont df = wb.createFont();
-          normalFont(df, fontSize, fuente, fontColor);
+          if (fs != null) {
+            procesado = fs.apply(column, rowind, df, valor);
+          }
+          if (procesado) {
+            fuente.setFont(df);
+          } else {
+            normalFont(df, fontSize, fuente, fontColor);
+          }
           cell.setCellStyle(fuente);
         }
         agregado = true;

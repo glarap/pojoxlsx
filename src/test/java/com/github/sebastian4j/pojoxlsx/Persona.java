@@ -15,7 +15,7 @@ class Persona {
   private Boolean vivo;
   @XlsxCellHeader(name = "Nacimiento", fontColor = 7)
   private Calendar nacimiento;
-  @XlsxCellHeader(name = "Fallecimiento")
+  @XlsxCellHeader(name = "Fallecimiento", fontColor = 3)
 	@XlsxCellBody(dateFormat = "dd-MM-yyyy HH:mm:ss")
   private Date fallecimiento;
   @XlsxCellHeader(name = "Peso Actual")
