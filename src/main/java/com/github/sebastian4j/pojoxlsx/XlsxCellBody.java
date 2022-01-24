@@ -1,10 +1,11 @@
 package com.github.sebastian4j.pojoxlsx;
 
+import org.apache.poi.ss.usermodel.IndexedColors;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import org.apache.poi.ss.usermodel.IndexedColors;
 
 /**
  * propiedades para las celdar del cuerpo del archivo.
@@ -53,4 +54,10 @@ public @interface XlsxCellBody {
    * @return true is se tiene que formatear el número
    */
   public boolean formatNumber() default false;
+
+  /**
+   * si es true deja vacía la celda cuando es 0.
+   * @return true deja vacía la celda cuando es 0, false continúa con el flujo normal
+   */
+  boolean blankZero() default false;
 }

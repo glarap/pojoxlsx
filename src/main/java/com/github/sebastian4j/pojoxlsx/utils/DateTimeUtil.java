@@ -1,13 +1,10 @@
 package com.github.sebastian4j.pojoxlsx.utils;
 
 import com.github.sebastian4j.pojoxlsx.XlsxCellBody;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
@@ -27,7 +24,7 @@ public final class DateTimeUtil {
     return ann != null && ann.epochLong();
   }
 
-  public static String format(Object milisegundos, final XlsxCellBody ann) {
+  public static String format(Object milisegundos, final XlsxCellBody ann, final ZoneId zoneId) {
     double milis = 0;
     if (milisegundos.getClass() == Long.class) {
       milis = (Long) milisegundos;
@@ -35,10 +32,18 @@ public final class DateTimeUtil {
       milis = (Double) milisegundos;
     }
     final ZonedDateTime zdt =
-        ZonedDateTime.ofInstant(Instant.ofEpochMilli((long) milis), zona(ann));
-    return hasFormat(ann)
-        ? zdt.format(DateTimeFormatter.ofPattern(ann.dateFormat()))
-        : zdt.toString();
+        ZonedDateTime.ofInstant(Instant.ofEpochMilli((long) milis), zona(ann, zoneId));
+    final String retorno;
+    if (ann != null && ann.blankZero() && milis == 0) {
+      retorno = "";
+    } else {
+      if (hasFormat(ann)) {
+        retorno = zdt.format(DateTimeFormatter.ofPattern(ann.dateFormat()));
+      } else {
+        retorno = zdt.toString();
+      }
+    }
+    return retorno;
   }
 
   /**
@@ -57,11 +62,15 @@ public final class DateTimeUtil {
    * @param ann datos del formato del campo
    * @return id de zona para ser utilizado
    */
-  private static ZoneId zona(final XlsxCellBody ann) {
-    final String predefinido = ann.zoneId();
+  private static ZoneId zona(final XlsxCellBody ann, ZoneId zoneId) {
     ZoneId zona = ZoneId.of("UTC");
-    if (predefinido != null && !predefinido.isEmpty()) {
-      zona = ZoneId.of(predefinido);
+    if (zoneId == null) {
+      final String predefinido = ann.zoneId();
+      if (predefinido != null && !predefinido.isEmpty()) {
+        zona = ZoneId.of(predefinido);
+      }
+    } else {
+      zona = zoneId;
     }
     return zona;
   }

@@ -3,21 +3,19 @@ package com.github.sebastian4j.pojoxlsx.utils;
 import com.github.sebastian4j.pojoxlsx.XlsxCellBody;
 import com.github.sebastian4j.pojoxlsx.XlsxCellHeader;
 import com.github.sebastian4j.pojoxlsx.XlsxCellStyleCallback;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.RichTextString;
+import org.apache.poi.xssf.usermodel.*;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.RichTextString;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * método utiles para la creación de archivos xlsx.
@@ -86,7 +84,7 @@ public final class PojoXlsxUtil {
       final T element,
       final Field field,
       final XSSFWorkbook wb,
-      XlsxCellStyleCallback fs) {
+      XlsxCellStyleCallback fs, final ZoneId zoneId) {
     boolean agregado = false;
     if (!omitir(field)) {
       final XSSFCell cell = row.createCell(column);
@@ -102,7 +100,7 @@ public final class PojoXlsxUtil {
           final XSSFFont df = wb.createFont();
           final XSSFCellStyle fuente = wb.createCellStyle();
           if (DateTimeUtil.hasEpochLong(ann)) {
-            cell.setCellValue(DateTimeUtil.format(valor, ann));
+            cell.setCellValue(DateTimeUtil.format(valor, ann, zoneId));
           } else if (valor instanceof String) {
             cell.setCellValue((String) valor);
           } else if (valor instanceof Integer) {

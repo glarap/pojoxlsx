@@ -1,5 +1,8 @@
 package com.github.sebastian4j.pojoxlsx;
 
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,9 +13,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import org.apache.poi.xssf.usermodel.XSSFColor;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 /**
  * test para la clase {@link PojoXlsx}.
@@ -71,31 +71,14 @@ public class PojoXlsxTest {
     personas.add(nonulo);
     personas.add(resumen);
     System.out.println("personas: " + personas.size());
+
     Assertions.assertThatCode(
             () -> {
               PojoXlsx.transform(
                   personas,
                   "reporte personas",
-                  baos,
-                  (a, b, c, d) -> {
-                    boolean procesado = false;
-                    if (a == 0) {
-                      switch (d.toString()) {
-                        case "elfo":
-                          c.setBold(true);
-                          c.setColor((short) 4);
-                          procesado = true;
-													break;
-                        case "nulo":
-                          c.setColor((short) 6);
-                          procesado = true;
-													break;
-                        default:
-                          break;
-                      }
-                    }
-                    return procesado;
-                  });
+                  baos
+                  );
             })
         .doesNotThrowAnyException();
     final File f = new File("salida.xlsx");
