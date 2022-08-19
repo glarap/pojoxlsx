@@ -28,19 +28,23 @@ public final class PojoXlsx {
      * @param os    donde se escribe el reporte generado
      * @throws IOException error al crear el archivo de salida
      */
-    public static <T> void transform(List<T> data, final String title, final OutputStream os, final ZoneId zoneId)
+    public static <T> void transform(List<T> data, final String title, final OutputStream os, final ZoneId zoneId, final Optional<String> emptyMessage)
             throws IOException {
-        transform(data, title, os, null, zoneId, Optional.empty());
+        transform(data, title, os, null, zoneId, Optional.empty(), emptyMessage);
     }
 
-    public static <T> void transform(List<T> data, final String title, final OutputStream os) throws IOException {
-        transform(data, title, os, null, null, Optional.empty());
+    public static <T> void transform(List<T> data, final String title, final OutputStream os, final ZoneId zoneId) throws IOException {
+        transform(data, title, os, null, zoneId, Optional.empty(), Optional.empty());
+    }
+    
+    public static <T> void transform(List<T> data, final String title, final OutputStream os, final Optional<String> emptyMessage) throws IOException {
+        transform(data, title, os, null, null, Optional.empty(), emptyMessage);
     }
 
     public static <T> void transform(
-            List<T> data, final String title, final OutputStream os, final XlsxCellStyleCallback fs)
+            List<T> data, final String title, final OutputStream os, final XlsxCellStyleCallback fs, final Optional<String> emptyMessage)
             throws IOException {
-        transform(data, title, os, fs, null, Optional.empty());
+        transform(data, title, os, fs, null, Optional.empty(), emptyMessage);
     }
 
     /**
@@ -50,12 +54,15 @@ public final class PojoXlsx {
      * @param title titulo de la hoja
      * @param os    donde se escribe el reporte generado
      * @param fs    estilos que se pueden aplicar a columnas
+     * @param zoneId nombre de la zona hoaria
+     * @param image imagen que puede ser agregada
+     * @param emptyMessage el mensaje que se mostrará cuando no hay datos
      * @throws IOException              error al crear el archivo de salida
-     * @throws IllegalArgumentException la data es null o está vacio
+     * @throws IllegalArgumentException la data es null
      */
     public static <T> void transform(
             List<T> data, final String title, final OutputStream os, final XlsxCellStyleCallback fs,
-            final ZoneId zoneId, final Optional<ImageSheet> image)
+            final ZoneId zoneId, final Optional<ImageSheet> image, final Optional<String> emptyMessage)
             throws IOException {
         if (data == null) {
             throw new IllegalArgumentException("sin datos para procesar");
@@ -82,11 +89,10 @@ public final class PojoXlsx {
                         }
                     }
                 }
-            } else {
+            } else if(emptyMessage.isPresent()) {
                 XSSFRow row = hoja.createRow(0);
                 final XSSFCell cell = row.createCell(0);
-                cell.setCellValue("No se encontraron datos para los criterios seleccionados");
-
+                cell.setCellValue(emptyMessage.get());
             }
                 if (image.isPresent()) {
                     addImage(image.get(), wb);
