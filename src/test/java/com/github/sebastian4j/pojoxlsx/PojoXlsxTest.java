@@ -9,10 +9,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * test para la clase {@link PojoXlsx}.
@@ -77,8 +79,10 @@ public class PojoXlsxTest {
               PojoXlsx.transform(
                   personas,
                   "reporte personas",
-                  baos
-                  );
+                  baos,
+                  ZoneId.of("America/Santiago"),
+                  Optional.empty()
+              );
             })
         .doesNotThrowAnyException();
     final File f = new File("salida.xlsx");
